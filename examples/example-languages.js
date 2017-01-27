@@ -9,7 +9,7 @@ const speech = require('@google-cloud/speech')({
 
 const hotwords = [
   { file: ROOT_DIR + 'resources/sonus.pmdl', hotword: 'sonus' },
-  { file: ROOT_DIR + 'resources/snowboy.pmdl', hotword: 'snowboy', language: 'fr-FR' }
+  { file: ROOT_DIR + 'resources/snowboy.umdl', hotword: 'snowboy', language: 'fr-FR' }
 ]
 const language = "en-US"
 
@@ -17,7 +17,7 @@ const language = "en-US"
 const sonus = Sonus.init({ hotwords, language, recordProgram: "rec" }, speech)
 
 Sonus.start(sonus)
-console.log('Say "' + hotwords[0].hotword + '"...')
+console.log('Say "' + hotwords.map(m => m.hotword).join('" or "') + '"...')
 
 sonus.on('hotword', (index, keyword) => console.log("!" + keyword))
 
