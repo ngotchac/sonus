@@ -87,7 +87,7 @@ Sonus.init = (options, recognizer) => {
   detector.on('sound', () => sonus.emit('sound'))
 
   // When a hotword is detected pipe the audio stream to speech detection
-  detector.on('hotword', (index, hotword) => {
+  detector.on('hotword', (index, hotword) => { 
     sonus.trigger(index, hotword)
   })
 
@@ -113,9 +113,13 @@ Sonus.init = (options, recognizer) => {
   sonus.trigger = (index, hotword) => {
     if (sonus.started) {
       try {
+        let triggerModel = opts.hotwords.find(model => model.hotword === hotword)
         let triggerHotword = (index == 0) ? hotword : models.lookup(index)
+        let language = triggerModel && triggerModel.language || options.language;
+        let speechOptions = Object.assign({}, opts, { language: language });
+        
         sonus.emit('hotword', index, triggerHotword)
-        CloudSpeechRecognizer.startStreaming(opts, sonus.mic, csr)
+        CloudSpeechRecognizer.startStreaming(speechOptions, sonus.mic, csr)
       } catch (e) {
         throw ERROR.INVALID_INDEX
       }
